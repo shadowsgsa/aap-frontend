@@ -9,7 +9,6 @@ import Typography from '@mui/material/Typography';
 import MenuContent from './MenuContent';
 import CardAlert from './CardAlert';
 import OptionsMenu from './OptionsMenu';
-import axios from 'axios';
 
 const drawerWidth = 240;
 

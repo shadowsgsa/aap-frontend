@@ -22,7 +22,7 @@ const PrivateRoute = ({ children }) => {
 
   const isAdmin = ()=>{
   const user = localStorage.getItem('role');
-  if (user.toLowerCase() === 'admin'){
+  if (user && user.toLowerCase() === 'admin'){
 
     return true;
     
@@ -88,4 +88,3 @@ const AdminRoute = ({ children }) => {
 }
 
 // Optional layout wrapper to include navbar/sidebar
-

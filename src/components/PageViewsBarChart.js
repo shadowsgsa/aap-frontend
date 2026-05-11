@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useTheme } from '@mui/material/styles';
-import axios from 'axios';
+import { api } from '../api';
 
 export default function ChildrenStatusBarChart() {
   const theme = useTheme();
@@ -23,7 +23,7 @@ export default function ChildrenStatusBarChart() {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/assessment/');
+        const response = await api.get('/api/assessment/');
         const assessments = response.data;
 
         // Aggregate data by month

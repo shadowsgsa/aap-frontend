@@ -16,7 +16,7 @@ import {
   BrazilFlag,
   GlobeFlag,
 } from '../internals/components/CustomIcons';
-import axios from 'axios';
+import { api } from '../api';
 
 const StyledText = styled('text', {
   shouldForwardProp: (prop) => prop !== 'variant',
@@ -75,17 +75,21 @@ const colors = [
 
 export default function ChartUserByCountry() {
   const [data, setData] = React.useState([]);
+  const flags = React.useMemo(
+    () => [<IndiaFlag />, <UsaFlag />, <BrazilFlag />, <GlobeFlag />],
+    [],
+  );
   const [countries, setCountries] = React.useState([
-    { name: 'India', value: 50, flag: <IndiaFlag />, color: 'hsl(220, 25%, 65%)' },
-    { name: 'USA', value: 35, flag: <UsaFlag />, color: 'hsl(220, 25%, 45%)' },
-    { name: 'Brazil', value: 10, flag: <BrazilFlag />, color: 'hsl(220, 25%, 30%)' },
-    { name: 'Other', value: 5, flag: <GlobeFlag />, color: 'hsl(220, 25%, 20%)' },
+    { name: 'India', value: 50, flag: flags[0], color: 'hsl(220, 25%, 65%)' },
+    { name: 'USA', value: 35, flag: flags[1], color: 'hsl(220, 25%, 45%)' },
+    { name: 'Brazil', value: 10, flag: flags[2], color: 'hsl(220, 25%, 30%)' },
+    { name: 'Other', value: 5, flag: flags[3], color: 'hsl(220, 25%, 20%)' },
   ]);
 
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/assessment/');
+        const response = await api.get('/api/assessment/');
         const chartData = response.data.map(item => ({
           label: item.district,
           value: item.totals.totalChildrenAssessed,
@@ -99,7 +103,7 @@ export default function ChartUserByCountry() {
         const updatedCountries = chartData.map((item, index) => ({
           name: item.label,
           value: ((item.value / total) * 100).toFixed(1),
-          flag: countries[index]?.flag || <GlobeFlag />,
+          flag: flags[index] || flags[3],
           color: colors[index % colors.length],
         }));
         setCountries(updatedCountries);
@@ -109,7 +113,7 @@ export default function ChartUserByCountry() {
     };
 
     fetchData();
-  }, []);
+  }, [flags]);
 
   return (
     <Card

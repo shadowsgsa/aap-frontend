@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Form, useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Modal } from '@mui/material';
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { Box, TextField, Button, Typography, Alert, Select,MenuItem, Stack, Divider } from '@mui/material';
-import axios from 'axios';
-import AlertTitle from '@mui/material/AlertTitle';
+import { api } from '../../api';
 
 export default function Signup() {
   const [email, setEmail] = useState('');
@@ -19,7 +17,23 @@ export default function Signup() {
   const [deleteId, setDeleteId] = useState(null);
   const [editData, setEditData] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
-  const navigate = useNavigate();
+
+  const dataListing = useCallback(async () => {
+    try {
+      const res = await api.get('/api/auth/users');
+      if(res.data.success){
+          console.log(res.data.users);
+          setData(res.data.users);
+      }
+      else{
+          console.error("Failed to fetch users");
+      }
+    }
+    catch (err) {
+        console.error(err);
+    }
+  }, []);
+
   const handleEditOpen = (row) => {
     // Implement edit functionality here
     setEditData(row);
@@ -31,30 +45,12 @@ export default function Signup() {
 
   useEffect(() => {
     dataListing();
-}, []);
-
-const dataListing  = async () => {
-    try {
-        const res = await axios.get('http://localhost:8000/api/auth/users');
-        if(res.data.success){
-            console.log(res.data.users);
-            setData(res.data.users);
-        }
-        else{
-            console.error("Failed to fetch users");
-        }
-
-
-    }
-    catch (err) {
-        console.error(err);
-    }
-}
+}, [dataListing]);
 // const filtered = data.filter(item => item !== null && item.data);
 const editSave = async (e) => {
     e.preventDefault();
     try {
-        const res = await axios.put(`http://localhost:8000/api/auth/users/${editData._id}`, {
+        const res = await api.put(`/api/auth/users/${editData._id}`, {
             role: editData.role
         });
         if(res.data.success){
@@ -72,7 +68,7 @@ const editSave = async (e) => {
     const handleDeleteConfirm = async (e) => {
     e.preventDefault();
     try {
-        const res = await axios.delete(`http://localhost:8000/api/auth/users/${deleteId}`);
+        const res = await api.delete(`/api/auth/users/${deleteId}`);
         if(res.data.success){
             setOpenDelete(false);
             dataListing();
@@ -90,7 +86,7 @@ const editSave = async (e) => {
     setError('');
 
     try {
-      const res = await axios.post('http://localhost:8000/api/auth/signup', {
+      const res = await api.post('/api/auth/signup', {
         email,
         password,
         name,

@@ -12,10 +12,9 @@ import {
   TableBody,
   Paper,
   Select,
-  InputLabel,
   MenuItem
 } from "@mui/material";
-import axios from "axios";
+import { api } from "../../api";
 import { useParams } from "react-router-dom";
 
 export default function AgricultureForm() {
@@ -94,7 +93,7 @@ const handleLivestockChange = (index, field, value) => {
 
 const submitLivestock = async () => {
   try {
-    const res = await axios.post("http://localhost:8000/api/livestock", {
+    const res = await api.post("/api/livestock", {
       rows: livestockRows
     });
     console.log(livestockRows);
@@ -133,10 +132,7 @@ const submitLivestock = async () => {
     try {
       // Ensure at least one row is sent
 
-      const res = await axios.post(
-        "http://localhost:8000/api/agriculture",
-        { rows: rows }
-      );
+      const res = await api.post("/api/agriculture", { rows: rows });
 
       console.log(res.data);
       alert(res.data.message || "Data Submitted Successfully!");
@@ -248,20 +244,10 @@ const submitLivestock = async () => {
 
   const handleSubmitNutrition = async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/assessment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const result = await res.json();
+      const res = await api.post("/api/assessment", formData);
+      const result = res.data;
       console.log(result);
-
-      if (res.ok) {
-        alert(result.message || "Assessment saved successfully!");
-      } else {
-        alert("Error: " + (result.error || "Unknown error"));
-      }
+      alert(result.message || "Assessment saved successfully!");
     } catch (err) {
       alert("Failed to connect to server");
     }

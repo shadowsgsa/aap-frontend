@@ -4,8 +4,6 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import AppNavbar from '../../components/AppNavbar';
 import Header from '../../components/Header';
-import Typography from '@mui/material/Typography';
-import MainGrid from '../../components/MainGrid';
 import ManageContentComp from '../../components/Content/manageContent';
 import SideMenu from '../../components/SideMenu';
 import AppTheme from '../../shared-theme/AppTheme';

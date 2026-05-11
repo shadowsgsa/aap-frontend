@@ -7,7 +7,7 @@ import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { LineChart } from '@mui/x-charts/LineChart';
-import axios from 'axios';
+import { api } from '../api';
 
 function AreaGradient({ color, id }) {
   return (
@@ -33,7 +33,7 @@ export default function ChildrenCuredChart() {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/assessment/');
+        const response = await api.get('/api/assessment/');
         const assessments = response.data;
 
         // Prepare data for chart (assuming 30 days, using monthName and reportDate)

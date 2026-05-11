@@ -16,6 +16,7 @@ import TextField from "@mui/material/TextField";
 
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { api } from "../../api";
 
 
 export default function ManageContentComp() {
@@ -37,11 +38,8 @@ export default function ManageContentComp() {
   }, []);
 
   const getData = async () => {
-    const response = await fetch("http://localhost:8000/api/assessment/");
-    if (response.ok) {
-      const json = await response.json();
-      setData(json);
-    }
+    const response = await api.get("/api/assessment/");
+    setData(response.data || []);
   };
 
   const handleEditOpen = (row) => {
@@ -50,11 +48,7 @@ export default function ManageContentComp() {
   };
 
   const handleEditSave = async () => {
-    await fetch(`http://localhost:8000/api/assessment/${editItem._id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(editItem),
-    });
+    await api.put(`/api/assessment/${editItem._id}`, editItem);
 
     setOpenEdit(false);
     getData();
@@ -62,17 +56,7 @@ export default function ManageContentComp() {
 
   const handleDeleteConfirm = async () => {
   try {
-    const response = await fetch(`http://localhost:8000/api/assessment/${deleteId}`, {
-      method: "DELETE",
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      console.error("Delete failed:", data.error || data.message);
-      alert("❌ Failed to delete assessment");
-      return;
-    }
+    await api.delete(`/api/assessment/${deleteId}`);
 
     alert("🗑️ Assessment deleted successfully!");
     setOpenDelete(false);
@@ -87,8 +71,8 @@ export default function ManageContentComp() {
   const filtered = data.filter((row) => {
     const q = search.toLowerCase();
     return (
-      row.district.toLowerCase().includes(q) ||
-      row.monthName.toLowerCase().includes(q)
+      (row.district || "").toLowerCase().includes(q) ||
+      (row.monthName || "").toLowerCase().includes(q)
     );
   });
 

@@ -1,16 +1,12 @@
 import { CssBaseline } from '@mui/material';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
-import AppNavbar from './components/AppNavbar';
-import SideMenu from './components/SideMenu';
-
 // Pages
 import HomePage from './pages/Home/HomePage';
 import Content from './pages/Content/content';
 import ManageContent from './pages/Content/manageContent';
 import LoginPage from './pages/Auth/Login';
 import SignupPage from './pages/Auth/createuser';
-import { useEffect } from 'react';
 // Auth helper
 
 export default function App() {
